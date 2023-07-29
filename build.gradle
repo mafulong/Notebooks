@@ -2,6 +2,7 @@ plugins {
     id 'java'
     // https://github.com/JetBrains/gradle-intellij-plugin
     id 'org.jetbrains.intellij' version '0.7.3'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
@@ -60,3 +61,10 @@ test {
     useJUnitPlatform()
 }
 
+// Create a task to generate the fat JAR
+shadowJar {
+    archiveClassifier.set('')
+}
+
+// Define the shadowJar task as a dependency of the build task
+build.dependsOn(shadowJar)
