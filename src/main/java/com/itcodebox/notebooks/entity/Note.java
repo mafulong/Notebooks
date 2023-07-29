@@ -20,8 +20,11 @@ public class Note extends Record {
     private String content;
     private String description;
     private String source;
+    // 偏移量，不是行号
     private int offsetStart;
     private int offsetEnd;
+    // 行号
+    public int startLine;
     private String type;
     private String imageRecords;
     public String getImageRecords() {

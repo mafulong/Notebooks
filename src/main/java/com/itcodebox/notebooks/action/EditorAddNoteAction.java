@@ -72,6 +72,11 @@ public class EditorAddNoteAction extends DumbAwareAction {
         note.setSource(filePath);
         note.setOffsetStart(offsetStart);
         note.setOffsetEnd(offsetEnd);
+
+        // 设置行号
+        int startLine = editor.getDocument().getLineNumber(note.getOffsetStart());
+        note.startLine = startLine;
+//        System.out.println("行号: " + startLine);
         //显示添加对话框
         new AddNoteDialog(project, note).show();
     }

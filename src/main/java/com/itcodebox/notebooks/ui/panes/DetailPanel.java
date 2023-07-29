@@ -168,6 +168,7 @@ public class DetailPanel extends JPanel {
         northPanel = buildTopPanel();
         add(northPanel, BorderLayout.NORTH);
         //2. -------------创建中间的界面-------------
+        // 这里是tool打开后的页面
         centerPanel.add(getNoteToolbar(), BorderLayout.NORTH);
 
         //1. 笔记描述和笔记内容的容器
@@ -191,7 +192,8 @@ public class DetailPanel extends JPanel {
 
         JBTabbedPane tabbedPane = new JBTabbedPane();
         tabbedPane.addTab(message("detailPanel.tab.content"), PluginIcons.TextInfo, textPanel, "");
-        tabbedPane.addTab(message("detailPanel.tab.image"), PluginIcons.ImageColorful, imagePanel, "");
+//        tabbedPane.addTab(message("detailPanel.tab.image"), PluginIcons.ImageColorful, imagePanel, "");
+//        centerPanel.add(getResourceBar());
         centerPanel.add(tabbedPane);
         add(centerPanel);
         setBorder(new JBEmptyBorder(0, 5, 5, 5));
@@ -641,6 +643,26 @@ public class DetailPanel extends JPanel {
         component.setBorder(new BottomLineBorder());
         return component;
     }
+    private JComponent getResourceBar() {
+        ActionManager actionManager = ActionManager.getInstance();
+        DefaultActionGroup actionGroup = new DefaultActionGroup("ACTION_GROUP_NOTE", false);
+//        actionGroup.add(initSearchAction());
+//        actionGroup.add(initActionAddNote());
+        //actionGroup.add(initEditAction());
+//        actionGroup.add(initSaveAction());
+//        actionGroup.add(initActionCopyContent());
+//        actionGroup.add(initInsertAction());
+        actionGroup.add(initOpenSourceFile());
+//        actionGroup.addSeparator();
+//        actionGroup.add(initCollapseAction());
+//        actionGroup.add(initDescPaneVisible());
+//        actionGroup.addSeparator();
+
+        ActionToolbar actionToolbar = actionManager.createActionToolbar("ACTION_GROUP_NOTE", actionGroup, true);
+        JComponent component = actionToolbar.getComponent();
+        component.setBorder(new BottomLineBorder());
+        return component;
+    }
 
     private DumbAwareAction initDescPaneVisible() {
         return new DumbAwareAction(message("detailPanel.action.showDesc.hide"), "", PluginIcons.Hide) {
@@ -685,7 +707,7 @@ public class DetailPanel extends JPanel {
     }
 
     private DumbAwareAction initOpenSourceFile() {
-        return new DumbAwareAction(message("detailPanel.action.openSource.text"), "", AllIcons.Actions.MenuOpen) {
+        return new DumbAwareAction(message("detailPanel.action.openSource.text"), "哈哈哈哈", AllIcons.Actions.MenuOpen) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 Note note = noteTable.getSelectedObject();
@@ -747,7 +769,7 @@ public class DetailPanel extends JPanel {
                         }
 
                         //如果内容完全相同, 那么才选中
-                        if (contentIsEquals && offsetStart < maxLen && offsetEnd < maxLen) {
+                        if (offsetStart < maxLen && offsetEnd < maxLen) {
                             //移动插入符的位置
                             editor.getCaretModel().moveToOffset(offsetStart, true);
                             //选中代码

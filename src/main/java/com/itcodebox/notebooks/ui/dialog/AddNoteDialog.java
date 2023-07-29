@@ -88,38 +88,41 @@ public class AddNoteDialog extends BaseNoteDialog {
             }
         }
 
-        String chapterName = (String) comboBoxChapterTitle.getSelectedItem();
-        Chapter chapter = chapterService.findByTitle(chapterName, notebook.getId());
-        if (chapter == null) {
-            chapter = chapterService.insert(new Chapter(notebook.getId(), chapterName, System.currentTimeMillis()));
-            ApplicationManager
-                    .getApplication()
-                    .getMessageBus()
-                    .syncPublisher(RecordListener.TOPIC)
-                    .onChapterAdd(project, chapter, true, false);
-        } else {
-            MainPanel mainPanel = project.getService(NotebooksUIManager.class).getMainPanel();
-            if (mainPanel != null) {
-                mainPanel.getChapterTable().selectedRow(chapter);
-            }
-        }
-        note.setNotebookId(notebook.getId());
-        note.setChapterId(chapter.getId());
-        long time = System.currentTimeMillis();
-        note.setCreateTime(time);
-        note.setUpdateTime(time);
-        note.setSource(fieldPath.getText());
-        String str = fieldRange.getText();
-        Matcher matcher = rangePattern.matcher(str);
-        if (matcher.matches()) {
-            String[] ss = str.split(":");
-            note.setOffsetStart(Integer.parseInt(ss[0].trim()));
-            note.setOffsetEnd(Integer.parseInt(ss[1].trim()));
-        }else{
-            note.setOffsetStart(0);
-            note.setOffsetEnd(0);
-        }
+    String chapterName = (String) comboBoxChapterTitle.getSelectedItem();
+    Chapter chapter = chapterService.findByTitle(chapterName, notebook.getId());
+    if (chapter == null) {
+      chapter = chapterService.insert(new Chapter(notebook.getId(), chapterName, System.currentTimeMillis()));
+      ApplicationManager
+          .getApplication()
+          .getMessageBus()
+          .syncPublisher(RecordListener.TOPIC)
+          .onChapterAdd(project, chapter, true, false);
+    } else {
+      MainPanel mainPanel = project.getService(NotebooksUIManager.class).getMainPanel();
+      if (mainPanel != null) {
+        mainPanel.getChapterTable().selectedRow(chapter);
+      }
     }
+    note.setNotebookId(notebook.getId());
+    note.setChapterId(chapter.getId());
+    long time = System.currentTimeMillis();
+    note.setCreateTime(time);
+    note.setUpdateTime(time);
+    note.setSource(fieldPath.getText());
+    String str = fieldRange.getText();
+    Matcher matcher = rangePattern.matcher(str);
+    if (matcher.matches()) {
+      String[] ss = str.split(":");
+      note.setOffsetStart(Integer.parseInt(ss[0].trim()));
+      note.setOffsetEnd(Integer.parseInt(ss[1].trim()));
+    } else {
+      note.setOffsetStart(0);
+      note.setOffsetEnd(0);
+    }
+//    System.out.println("行号: hhh : "+note.startLine);
+    String desc = String.format("idea://open?file=%s&line=%s", note.getSource(), note.startLine);
+    note.setDescription(desc);
+  }
 
     @Override
     protected @NotNull
